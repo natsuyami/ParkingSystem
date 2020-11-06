@@ -1,0 +1,14 @@
+C:\Users\emman\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\emman\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\emman\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\emman\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csprojAssemblyReference.cache
+C:\Users\emman\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\emman\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\emman\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+C:\Users\emman\source\repos\Garage\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\emman\source\repos\Garage\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\emman\source\repos\Garage\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\emman\source\repos\Garage\ConsoleApp1\obj\Debug\ConsoleApp1.csprojAssemblyReference.cache
+C:\Users\emman\source\repos\Garage\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\emman\source\repos\Garage\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\emman\source\repos\Garage\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
