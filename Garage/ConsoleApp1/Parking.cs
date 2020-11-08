@@ -1,202 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace ParkingSystem
 {
     class Parking
     {
+        private int totalArrivals = 0; // total counts of vehicles who sign for registration
+        private int totalDeparted = 0; // total counts of departed vehicles
+        Stack<Vehicle> parked = new Stack<Vehicle>(); //Stacks for vehicles inside the parking slot
+        Stack<Vehicle> departed = new Stack<Vehicle>(); //Stacks for vehicles departed
 
-        int Acounter = 0;
-        int Dcounter = 0;
-        Stack<int> inside = new Stack<int>(); //Stacks for vehicles inside the parking slot
-        Stack<int> outside = new Stack<int>(); //Stacks for vehicles outside the parking slot
+        private const string DEFAULT_MESSAGE = "Press enter to try again";
+        private const string MESSAGE_ONE = "That car is already in the parking space\n" + DEFAULT_MESSAGE;
+        private const string MESSAGE_TWO = "The Parking Area is full\n" + DEFAULT_MESSAGE;
+        private const string MESSAGE_THREE = "Successfully Parked!\n" + DEFAULT_MESSAGE;
+        private const string MESSAGE_FOUR = "Successfully Departed!\n" + DEFAULT_MESSAGE;
+        private const string MESSAGE_FIVE = "Car license number not found\n" + DEFAULT_MESSAGE;
 
-        public void EnhanceOperation()
+        private Screen screen = new Screen();
+
+        public void RegisterVehicle()
         {
-            int result = 5;
-            Parking.UI();
-            this.Choice(out result);
-            this.Todo(result);
-        }
+            screen.InputPlateNumber();
 
-        public static void UI()
-        {
-            Console.WriteLine("*********Welcome to the Garage Simulation*******");
-            Console.WriteLine("1. Vehicle entry registration");
-            Console.WriteLine("2. Vehicle departure registration");
-            Console.WriteLine("3. Number of Arrivals and Departures");
-            Console.WriteLine("4. Check parking space");
-            Console.WriteLine("5. Exit");
-            Console.WriteLine("************************************************");
-        }
+            var matches = parked.Where(p => p.GetPlateNumber() == screen.getPlateNumber());
 
-        public void Choice(out int result)
-        {
-            Console.WriteLine("Enter your choice:");
-            try
+            if (matches.Any())
             {
-                result = Convert.ToInt32(Console.ReadLine());
-                if (result >= 6 || result < 0) {
-                    throw new FormatException();
-                }
+                screen.WriteResult(MESSAGE_ONE);
             }
-            catch (FormatException)
+            else if (parked.Count == 10)
             {
-                result = 0;
-                Console.Clear();
-                Console.WriteLine("Incorrect input, choose only from 1 to 5.");
-                Parking.UI();
-                this.Choice(out result);
-            }
-        }
-
-        public void Todo(int choice)
-        {
-
-            Console.Clear();
-            switch(choice)
-            {
-                case 1:
-                    this.ChoiceOne();
-                    break;
-                case 2:
-                    this.ChoiceTwo();
-                    break;
-                case 3:
-                    this.ChoiceThree();
-                    break;
-                case 4:
-                    this.ChoiceFour();
-                    break;
-                case 5:
-                    break;
-                
-            }
-        }
-
-        public void GetPlate(out int result)
-        {
-            try
-            {
-                Console.WriteLine("Please enter the license plate number: ");
-                result = Convert.ToInt32(Console.ReadLine());
-            }
-            catch (FormatException)
-            {
-                Console.Clear();
-                Console.WriteLine("Choose only numbers.");
-                this.GetPlate(out result);
-            }
-;
-        }
-
-        public void ChoiceOne()
-        {
-            int plateNumber;
-            this.GetPlate(out plateNumber);
-            if (inside.Contains(plateNumber) == true)
-            {
-                Console.WriteLine("That car is already in the parking space");
-                Console.WriteLine("Press enter to try again");
-                Console.ReadLine();
-                Console.Clear();
-
-
-            }
-            else if (inside.Count() == 10)
-            {
-                Console.WriteLine("The Parking Area is full");
-                Console.WriteLine("Press enter to go back");
-                Console.ReadLine();
-                Console.Clear();
+                screen.WriteResult(MESSAGE_TWO);
             }
             else
             {
-                inside.Push(plateNumber);
-                Acounter = Acounter + 1;
-                Console.WriteLine("Successfully Parked!");
-                Console.WriteLine("Press enter to go back");
-                Console.ReadLine();
-                Console.Clear();     
+                totalArrivals++;
+                Vehicle vehicle = new Vehicle(totalArrivals, screen.getPlateNumber(), "unknown");
+                parked.Push(vehicle);
+                screen.WriteResult(MESSAGE_THREE);
             }
-            this.EnhanceOperation();
         }
 
-        public void ChoiceTwo()
+        public void DepartVehicle()
         {
-            int plateNumber = 0;
-            Console.WriteLine("List of Parked Plate Numbers:");
-            foreach (var item in inside)
-                Console.WriteLine(item);
-            this.GetPlate(out plateNumber);
-            if (inside.Contains(plateNumber) == true)
+            this.ListVehicles();
+
+            screen.InputPlateNumber();
+
+            var matches = parked.Where(p => p.GetPlateNumber() == screen.getPlateNumber());
+
+            if (matches.Any())
             {
-                int checker = inside.Peek();
-                while (checker != plateNumber)
+
+                while (matches.Any()) 
                 {
-
-                    outside.Push(inside.Pop());
-                    Dcounter = Dcounter + 1;
-                    checker = inside.Peek();
+                    parked.Pop();
+                    totalDeparted++;
+                    matches = parked.Where(p => p.GetPlateNumber() == screen.getPlateNumber());
                 }
-                if (checker == plateNumber)
-                {
-                    Dcounter = Dcounter + 1;
-                    inside.Pop();
-                }
-                foreach (var item in outside)
-                    Acounter = Acounter + 1;
-                foreach (var item in outside)
-                    inside.Push(item);
 
-                outside.Clear();
+                Vehicle vehicle = new Vehicle(totalDeparted, screen.getPlateNumber(), "unknown");
+                departed.Push(vehicle);
 
-                Console.WriteLine("Successfully Departed!");
-                Console.WriteLine("Press enter to go back");
-                Console.ReadLine();
-                Console.Clear();
+                screen.WriteResult(MESSAGE_FOUR);
             }
             else
             {
-                Console.WriteLine("Car license number not found");
-                Console.WriteLine("Press enter to go back");
-                Console.ReadLine();
-                Console.Clear();
+                screen.WriteResult(MESSAGE_FIVE);
             }
-            this.EnhanceOperation();
         }
 
-        public void ChoiceThree()
+        public void TotalCounts()
         {
-            Console.WriteLine("Number of Arrivals:" + Acounter);
-            Console.WriteLine("Number of Departures:" + Dcounter);
-            Console.WriteLine("Press enter to go back");
-            Console.ReadLine();
-            Console.Clear();
-            this.EnhanceOperation();
+            screen.WriteResult("Number of Arrivals:" + totalArrivals + "\nNumber of Departures:" + totalDeparted);
         }
 
-        public void ChoiceFour()
+        public void TotalParkingSpace()
         {
-            Console.WriteLine("Number of cars in the parking lot: {0}", inside.Count);
-            int Space = 10 - inside.Count;
+            Console.WriteLine("Number of cars in the parking lot: {0}", parked.Count);
+            int Space = 10 - parked.Count;
             Console.WriteLine("Number of free spaces: {0}", Space);
-            Console.WriteLine("License plate list:");
-            foreach (var item in inside)
-                Console.WriteLine(item);
+            this.ListVehicles();
+            screen.WriteResult(DEFAULT_MESSAGE);
+        }
 
-            Console.WriteLine("Press enter to go back");
-            Console.ReadLine();
-            Console.Clear();
-            this.EnhanceOperation();
+        public void ListVehicles()
+        {
+            Console.WriteLine("List of Parked Plate Numbers:");
+            foreach (Vehicle vehicle in parked)
+            {
+                Console.WriteLine("ID: " + vehicle.GetId() + ", Plate Number: " + vehicle.GetPlateNumber() + ", Type: " + vehicle.GetType());
+            }
         }
     }
 
 }
-
-
-    
